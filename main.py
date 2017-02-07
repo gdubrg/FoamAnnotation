@@ -53,15 +53,22 @@ class FoamAnnotate:
 	def updateCoords(self):
 		self.oldY1 = self.y1
 		self.oldY2 = self.y2
+		self.linesIdx = []
+		self.linesIdx.append((self.colorRED,self.oldY1))
+		self.linesIdx.append((self.colorBLUE,self.oldY2))
 
 	def onMouse(self, event, x, y, flags, param):
 		if event == cv2.EVENT_LBUTTONDOWN:
 			self.numClick += 1
 
 			if self.firstLine:
+				self.tmpImage = cv2.cvtColor(self.image.copy(), cv2.COLOR_GRAY2BGR)
+				self.writeDocImage()
+				self.numClick = 0
+				# self.linesIdx = []
 				self.firstLine = False
 				cv2.line(self.tmpImage, (0, y), (self.tmpImage.shape[1] - 1, y),self.colorRED,1)
-				self.linesIdx.append((self.colorRED, y))
+				# self.linesIdx.append((self.colorRED, y))
 				self.y1 = y
 
 				cv2.imshow("Annotation",self.tmpImage)
@@ -69,19 +76,20 @@ class FoamAnnotate:
 			else:
 				self.firstLine = True
 				cv2.line(self.tmpImage, (0, y), (self.tmpImage.shape[1] - 1, y),self.colorBLUE,1)
-				self.linesIdx.append((self.colorBLUE,y))
+				# self.linesIdx.append((self.colorBLUE,y))
 				self.y2 = y
+				self.updateCoords()
 
 				cv2.imshow("Annotation", self.tmpImage)
 				# print "Line Down", y
 
-			if self.numClick >= 2:
-				self.tmpImage = cv2.cvtColor(self.image.copy(), cv2.COLOR_GRAY2BGR)
-				self.writeDocImage()
-				self.numClick = 0
+			# if self.numClick >= 2:
+			# 	self.tmpImage = cv2.cvtColor(self.image.copy(), cv2.COLOR_GRAY2BGR)
+			# 	self.writeDocImage()
+			# 	self.numClick = 0
 
-			if self.numClick == 2:
-				self.linesIdx = []
+			# if self.numClick == 2:
+			# 	self.linesIdx = []
 
 	def file_len(self, fname):
 		with open(fname) as f:
@@ -127,16 +135,20 @@ class FoamAnnotate:
 			self.image = cv2.resize(self.image, (0, 0), fx=self.ratio, fy=self.ratio)
 
 		self.tmpImage = cv2.cvtColor(self.image.copy(),cv2.COLOR_GRAY2BGR)
-		self.linesIdx = []
+		# self.linesIdx = []
 
 		cv2.namedWindow("Annotation")
 		cv2.setMouseCallback('Annotation', self.onMouse)
 
 		self.writeDocImage()
+		if self.oldY1 > 0 and self.oldY2 > 0:
+			cv2.line(self.tmpImage, (0, self.oldY1), (self.tmpImage.shape[1] - 1, self.oldY1), self.colorRED, 1)
+			cv2.line(self.tmpImage, (0, self.oldY2), (self.tmpImage.shape[1] - 1, self.oldY2), self.colorBLUE, 1)
 		cv2.imshow("Annotation", self.tmpImage)
 
 		while (1):
 			k = cv2.waitKey(1)
+
 			# key bindings
 			if k == 27:  # esc to exit
 				return False
@@ -184,7 +196,6 @@ class FoamAnnotate:
 					self.file.seek(0,2)
 					self.file.write(str(f_val)+"\t"+str(self.y1)+"\t"+str(self.y2)+"\n")
 					self.file.flush()
-					pass ##todo save data
 				else:
 					self.file.close()
 					return
