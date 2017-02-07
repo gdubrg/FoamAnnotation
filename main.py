@@ -4,8 +4,8 @@ import os
 
 class FoamAnnotate:
 	def __init__(self, dir = "..\\Dataset"):
+		# self.dataset = self.dir + ".txt"
 		self.dir = dir
-		self.dataset = self.dir + ".txt"
 		self.dirWalk = []
 		self.indexes = [] # indice 0 indica dir, indice 1 indica file
 		self.indexes.append((0,0))
@@ -34,13 +34,14 @@ class FoamAnnotate:
 			for subdirname in dirnames:
 				tmp = []
 				dirtmp = os.path.join(dirname, subdirname)
-				tmp.append(os.path.join(dirname, subdirname))
+				# tmp.append(os.path.join(dirname, subdirname))
+				tmp.append(subdirname)
 				# print os.path.join(dirname, subdirname)
 
 				for d, dir, f in os.walk(dirtmp):
 					for fn in f:
-						tmp.append(os.path.join(d, fn))
-						# tmp.append(fn)
+						# tmp.append(os.path.join(d, fn))
+						tmp.append(fn)
 						# print os.path.join(d, fn)
 
 				self.dirWalk.append(tmp)
@@ -161,24 +162,47 @@ class FoamAnnotate:
 					continue
 				return True
 
+	def expandString(self, value, expansion):
+		value = str(value)
+		if len(value) < expansion:
+			for i in range(0, expansion-len(value)):
+				value = "0" + value
+		return value
+
 	def Annotate(self):
-		if not os.path.exists(self.dataset):
-			self.file = open(self.dataset, 'w')
-			self.file.close()
+		# if not os.path.exists(self.dataset):
+		# 	self.file = open(self.dataset, 'w')
+		# 	self.file.close()
 
-		fileLen = self.file_len(self.dataset)
-		self.file = None
+		# fileLen = self.file_len(self.dataset)
+		# self.file = None
 
-		if fileLen == 0:
-			self.file = open(self.dataset, 'w')
-		else:
-			self.file = open(self.dataset,'r')
-			line = self.file.readline()
-			self.indexes = np.array(line.replace("\n","").split("\t"),dtype=np.int32)
-			self.file.close()
-			self.file = open(self.dataset, 'r+')
+		# if fileLen == 0:
+		# 	self.file = open(self.dataset, 'w')
+		# else:
+		# 	self.file = open(self.dataset,'r')
+		# 	line = self.file.readline()
+		# 	self.indexes = np.array(line.replace("\n","").split("\t"),dtype=np.int32)
+		# 	self.file.close()
+		# 	self.file = open(self.dataset, 'r+')
 
 		for i,v in enumerate(self.dirWalk):
+			fname = "..\\" + v[0] + ".txt"
+
+			if not os.path.exists(fname):
+				self.file = open(fname, 'w')
+				self.file.close()
+			fileLen = self.file_len(fname)
+			self.file = None
+			if fileLen == 0:
+				self.file = open(fname, 'w')
+			else:
+				self.file = open(fname, 'r')
+				line = self.file.readline()
+				self.indexes = np.array(line.replace("\n", "").split("\t"), dtype=np.int32)
+				self.file.close()
+				self.file = open(fname, 'r+')
+
 			if self.indexes is not None:
 				if i < self.indexes[0]:
 					continue
@@ -190,9 +214,11 @@ class FoamAnnotate:
 						continue
 
 				self.nframe = str(f_i)
-				if self.annotate_image(f_val):
+				if self.annotate_image(self.dir + "\\" + v[0] + "\\" + f_val):
+					i2 = self.expandString(i,3)
+					f_i2 = self.expandString(f_i,6)
 					self.file.seek(0)
-					self.file.write(str(i)+"\t"+str(f_i)+"\n")
+					self.file.writelines(str(i2)+"\t"+str(f_i2)+"\n")
 					self.file.seek(0,2)
 					self.file.write(str(f_val)+"\t"+str(self.y1)+"\t"+str(self.y2)+"\n")
 					self.file.flush()
