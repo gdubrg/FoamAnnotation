@@ -2,8 +2,6 @@ import cv2
 import numpy as np
 import os
 
-#DSWERFEWFSDFEW
-
 class FoamAnnotate:
 	def __init__(self, dir = "..\\Dataset"):
 		self.dir = dir
@@ -24,8 +22,8 @@ class FoamAnnotate:
 		self.ratio = 0
 		self.y1 = -1
 		self.y2 = -1
-		self.oldX = -1
-		self.oldY = -1
+		self.oldY1 = -1
+		self.oldY2 = -1
 		self.file = None
 		self.indexes = None
 		self.nframe = str("")
@@ -51,6 +49,10 @@ class FoamAnnotate:
 			# for filename in filenames:
 			# 	tmp.append(os.path.join(dirname, filename))
 			# 	print(os.path.join(dirname, filename))
+
+	def updateCoords(self):
+		self.oldY1 = self.y1
+		self.oldY2 = self.y2
 
 	def onMouse(self, event, x, y, flags, param):
 		if event == cv2.EVENT_LBUTTONDOWN:
