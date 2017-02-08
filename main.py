@@ -3,7 +3,7 @@ import numpy as np
 import os
 
 class FoamAnnotate:
-	def __init__(self, dir = "..\\Dataset"):
+	def __init__(self, dir = "Dataset"):
 		# self.dataset = self.dir + ".txt"
 		self.dir = dir
 		self.dirWalk = []
