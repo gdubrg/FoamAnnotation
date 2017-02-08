@@ -187,7 +187,7 @@ class FoamAnnotate:
 		# 	self.file = open(self.dataset, 'r+')
 
 		for i,v in enumerate(self.dirWalk):
-			fname = "..\\" + v[0] + ".txt"
+			fname = self.dir + "\\" + v[0] + ".txt"
 
 			if not os.path.exists(fname):
 				self.file = open(fname, 'w')
@@ -220,7 +220,7 @@ class FoamAnnotate:
 					self.file.seek(0)
 					self.file.writelines(str(i2)+"\t"+str(f_i2)+"\n")
 					self.file.seek(0,2)
-					self.file.write(str(f_val)+"\t"+str(self.y1)+"\t"+str(self.y2)+"\n")
+					self.file.write(str(f_val)+"\t"+str(int(1.0/self.ratio*self.y1))+"\t"+str(int(1.0/self.ratio*self.y2))+"\n")
 					self.file.flush()
 				else:
 					self.file.close()
@@ -229,5 +229,3 @@ class FoamAnnotate:
 if __name__ == '__main__':
 
 	FoamAnnotate().Annotate()
-
-
