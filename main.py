@@ -19,7 +19,7 @@ class FoamAnnotate:
 		self.numClick = 0
 		self.linesIdx = []
 		self.MAX_DIM = 800.0
-		self.ratio = 0
+		self.ratio = 1.0
 		self.y1 = -1
 		self.y2 = -1
 		self.oldY1 = -1
