@@ -84,14 +84,6 @@ class FoamAnnotate:
 				cv2.imshow("Annotation", self.tmpImage)
 				# print "Line Down", y
 
-			# if self.numClick >= 2:
-			# 	self.tmpImage = cv2.cvtColor(self.image.copy(), cv2.COLOR_GRAY2BGR)
-			# 	self.writeDocImage()
-			# 	self.numClick = 0
-
-			# if self.numClick == 2:
-			# 	self.linesIdx = []
-
 	def file_len(self, fname):
 		with open(fname) as f:
 			len = 0
@@ -170,21 +162,6 @@ class FoamAnnotate:
 		return value
 
 	def Annotate(self):
-		# if not os.path.exists(self.dataset):
-		# 	self.file = open(self.dataset, 'w')
-		# 	self.file.close()
-
-		# fileLen = self.file_len(self.dataset)
-		# self.file = None
-
-		# if fileLen == 0:
-		# 	self.file = open(self.dataset, 'w')
-		# else:
-		# 	self.file = open(self.dataset,'r')
-		# 	line = self.file.readline()
-		# 	self.indexes = np.array(line.replace("\n","").split("\t"),dtype=np.int32)
-		# 	self.file.close()
-		# 	self.file = open(self.dataset, 'r+')
 
 		for i,v in enumerate(self.dirWalk):
 			fname = self.dir + "\\" + v[0] + ".txt"
