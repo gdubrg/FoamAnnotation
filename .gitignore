@@ -1,2 +1,4 @@
-Dataset/
-.idea
+*
+
+!.py
+!.gitignore
