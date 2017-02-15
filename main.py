@@ -192,7 +192,7 @@ class FoamAnnotate:
 				if f_i < 1:
 					continue
 				if self.indexes is not None:
-					if f_i <= self.indexes[1]:
+					if f_i <= self.indexes:
 						continue
 
 				self.nframe = str(f_i)
