@@ -7,8 +7,8 @@ class FoamAnnotate:
 		# self.dataset = self.dir + ".txt"
 		self.dir = dir
 		self.dirWalk = []
-		self.indexes = [] # indice 0 indica dir, indice 1 indica file
-		self.indexes.append((0,0))
+		# self.indexes = [] # indice 0 indica dir, indice 1 indica file
+		# self.indexes.append((0,0))
 		self.firstLine = True
 		self.colorBLUE = [255,0,0]
 		self.colorYELLOW = [0,255,255]
@@ -166,8 +166,7 @@ class FoamAnnotate:
 	def Annotate(self):
 
 		for i,v in enumerate(self.dirWalk):
-			self.indexes = []  # indice 0 indica dir, indice 1 indica file
-			self.indexes.append((0, 0))
+			self.indexes = None
 
 			fname = self.dir + "\\" + v[0] + ".txt"
 
@@ -181,13 +180,14 @@ class FoamAnnotate:
 			else:
 				self.file = open(fname, 'r')
 				line = self.file.readline()
-				self.indexes = np.array(line.replace("\n", "").split("\t"), dtype=np.int32)
+				# self.indexes = np.array(line.replace("\n", "").split("\t"), dtype=np.int32)
+				self.indexes = np.array(line.replace("\n", ""), dtype=np.int32)
 				self.file.close()
 				self.file = open(fname, 'r+')
 
-			if self.indexes is not None:
-				if i < self.indexes[0]:
-					continue
+			# if self.indexes is not None:
+			# 	if i < self.indexes[0]:
+			# 		continue
 			for f_i, f_val in enumerate(v):
 				if f_i < 1:
 					continue
@@ -200,7 +200,8 @@ class FoamAnnotate:
 					i2 = self.expandString(i,3)
 					f_i2 = self.expandString(f_i,6)
 					self.file.seek(0)
-					self.file.writelines(str(i2)+"\t"+str(f_i2)+"\n")
+					# self.file.writelines(str(i2)+"\t"+str(f_i2)+"\n")
+					self.file.writelines(str(f_i2) + "\n")
 					self.file.seek(0,2)
 					self.file.write(str(f_val)+"\t"+str(int(1.0/self.ratio*self.y1))+"\t"+str(int(1.0/self.ratio*self.y2))+"\n")
 					self.file.flush()
