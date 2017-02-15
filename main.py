@@ -166,6 +166,9 @@ class FoamAnnotate:
 	def Annotate(self):
 
 		for i,v in enumerate(self.dirWalk):
+			self.indexes = []  # indice 0 indica dir, indice 1 indica file
+			self.indexes.append((0, 0))
+
 			fname = self.dir + "\\" + v[0] + ".txt"
 
 			if not os.path.exists(fname):
