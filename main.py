@@ -8,8 +8,6 @@ class FoamAnnotate:
 		# self.dataset = self.dir + ".txt"
 		self.dir = dir
 		self.dirWalk = []
-		# self.indexes = [] # indice 0 indica dir, indice 1 indica file
-		# self.indexes.append((0,0))
 		self.firstLine = True
 		self.colorBLUE = [255,0,0]
 		self.colorYELLOW = [0,255,255]
