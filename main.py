@@ -1,9 +1,10 @@
 import cv2
 import numpy as np
 import os
+import sys
 
 class FoamAnnotate:
-	def __init__(self, dir = "Dataset"):
+	def __init__(self, dir = "Dataset", folder = None):
 		# self.dataset = self.dir + ".txt"
 		self.dir = dir
 		self.dirWalk = []
@@ -28,28 +29,41 @@ class FoamAnnotate:
 		self.indexes = None
 		self.nframe = str("")
 
-		for dirname, dirnames, filenames in os.walk(dir):
-			# print path to all subdirectories first.
+		if folder is None:
 
-			for subdirname in dirnames:
-				tmp = []
-				dirtmp = os.path.join(dirname, subdirname)
-				# tmp.append(os.path.join(dirname, subdirname))
-				tmp.append(subdirname)
-				# print os.path.join(dirname, subdirname)
+			for dirname, dirnames, filenames in os.walk(dir):
+				# print path to all subdirectories first.
 
-				for d, dir, f in os.walk(dirtmp):
-					for fn in f:
-						# tmp.append(os.path.join(d, fn))
-						tmp.append(fn)
-						# print os.path.join(d, fn)
+				for subdirname in dirnames:
+					tmp = []
+					dirtmp = os.path.join(dirname, subdirname)
+					# tmp.append(os.path.join(dirname, subdirname))
+					tmp.append(subdirname)
+					# print os.path.join(dirname, subdirname)
 
-				self.dirWalk.append(tmp)
+					for d, dir, f in os.walk(dirtmp):
+						for fn in f:
+							# tmp.append(os.path.join(d, fn))
+							tmp.append(fn)
+							# print os.path.join(d, fn)
 
-			# print path to all filenames.
-			# for filename in filenames:
-			# 	tmp.append(os.path.join(dirname, filename))
-			# 	print(os.path.join(dirname, filename))
+					self.dirWalk.append(tmp)
+
+				# print path to all filenames.
+				# for filename in filenames:
+				# 	tmp.append(os.path.join(dirname, filename))
+				# 	print(os.path.join(dirname, filename))
+
+		else:
+			self.dirWalk.append(folder)
+			for dirname, dirnames, filenames in os.walk(dir + "\\" + folder):
+
+				# print path to all filenames.
+				for filename in filenames:
+					self.dirWalk.append(filename)
+
+			# print "folder"
+
 
 	def updateCoords(self):
 		self.oldY1 = self.y1
@@ -211,4 +225,12 @@ class FoamAnnotate:
 
 if __name__ == '__main__':
 
-	FoamAnnotate().Annotate()
+	folder = None
+
+	if len(sys.argv) == 1:
+		FoamAnnotate().Annotate()
+	elif len(sys.argv) == 2:
+		f = sys.argv[1]
+		FoamAnnotate(folder=f).Annotate()
+	else:
+		print "Input"
