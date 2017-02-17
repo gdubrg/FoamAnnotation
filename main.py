@@ -53,12 +53,15 @@ class FoamAnnotate:
 				# 	print(os.path.join(dirname, filename))
 
 		else:
-			self.dirWalk.append(folder)
+			tmp = []
+			tmp.append(folder)
 			for dirname, dirnames, filenames in os.walk(dir + "\\" + folder):
 
 				# print path to all filenames.
 				for filename in filenames:
-					self.dirWalk.append(filename)
+					tmp.append(filename)
+
+			self.dirWalk.append(tmp)
 
 			# print "folder"
 
@@ -231,4 +234,4 @@ if __name__ == '__main__':
 		f = sys.argv[1]
 		FoamAnnotate(folder=f).Annotate()
 	else:
-		print "Input"
+		print "Input Error"
