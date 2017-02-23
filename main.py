@@ -161,7 +161,7 @@ class FoamAnnotate:
 
 			# key bindings
 			if k == 27:  # esc to exit
-				return False
+				return 1
 			if k == 32: # space bar
 				# print "space bar"
 				value, str = self.checkLines()
@@ -169,7 +169,10 @@ class FoamAnnotate:
 					# print self.numLines
 					print str
 					continue
-				return True
+				return 2
+			if k == ord('\b'):
+				return 3
+				# print "back space"
 
 	def expandString(self, value, expansion):
 		value = str(value)
@@ -191,19 +194,24 @@ class FoamAnnotate:
 			fileLen = self.file_len(fname)
 			self.file = None
 			if fileLen == 0:
-				self.file = open(fname, 'w')
+				self.file = open(fname, 'r+')
 			else:
 				self.file = open(fname, 'r')
 				line = self.file.readline()
 				# self.indexes = np.array(line.replace("\n", "").split("\t"), dtype=np.int32)
-				self.indexes = np.array(line.replace("\n", ""), dtype=np.int32)
+				self.indexes = int(line.replace("\n", ""))
 				self.file.close()
 				self.file = open(fname, 'r+')
 
 			# if self.indexes is not None:
 			# 	if i < self.indexes[0]:
 			# 		continue
-			for f_i, f_val in enumerate(v):
+			# for f_i, f_val in enumerate(v):
+			i = -1
+			while i < len(v) -1:
+				i += 1
+				f_i = i
+				f_val = v[i]
 				if f_i < 1:
 					continue
 				if self.indexes is not None:
@@ -211,8 +219,9 @@ class FoamAnnotate:
 						continue
 
 				self.nframe = str(f_i)
-				if self.annotate_image(self.dir + "\\" + v[0] + "\\" + f_val):
-					i2 = self.expandString(i,3)
+				code = self.annotate_image(self.dir + "\\" + v[0] + "\\" + f_val)
+				if code == 2:
+					# i2 = self.expandString(i,3)
 					f_i2 = self.expandString(f_i,6)
 					self.file.seek(0)
 					# self.file.writelines(str(i2)+"\t"+str(f_i2)+"\n")
@@ -220,9 +229,33 @@ class FoamAnnotate:
 					self.file.seek(0,2)
 					self.file.write(str(f_val)+"\t"+str(int(1.0/self.ratio*self.y1))+"\t"+str(int(1.0/self.ratio*self.y2))+"\n")
 					self.file.flush()
-				else:
+				elif code == 1:
 					self.file.close()
 					return
+
+				elif code == 3:
+					if i-2 <= 0:
+						i = -1
+						f_i = i
+						self.indexes = None
+					else:
+						i -= 2
+						f_i = i
+						# i2 = self.expandString(i, 3)
+						f_i2 = self.expandString(f_i, 6)
+						self.file.seek(0)
+						# self.file.writelines(str(i2)+"\t"+str(f_i2)+"\n")
+						self.file.writelines(str(f_i2) + "\n")
+						# self.file.seek(0, 2)
+						############################
+						self.file.seek(0)
+						for x in xrange(int(f_i2) + 1):  ### +1 becouse count start from line 2
+							self.file.readline()
+						self.file.truncate()
+						##########################
+						self.file.flush()
+						self.indexes -= 1
+						print ""
 
 if __name__ == '__main__':
 
