@@ -114,9 +114,11 @@ class FoamAnnotate:
 
 		cv2.putText(self.tmpImage, "Tasto SPACE: salva e prossimo frame", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1,
 					(225, 120, 0))
-		cv2.putText(self.tmpImage, "Tasto ESC: uscita (NON premere X per uscire)", (50, 100), cv2.FONT_HERSHEY_SIMPLEX,
+		cv2.putText(self.tmpImage, "Tasto ESC: uscita (NON premere X per uscire)", (50, 90), cv2.FONT_HERSHEY_SIMPLEX,
 					1, (0, 0, 200))
-		cv2.putText(self.tmpImage, "In caso di click errato, NON salvare ma ripetere i click dopo il 2", (50, 130),
+		cv2.putText(self.tmpImage, "In caso di click errato, NON salvare ma ripetere i click dopo il 2", (50, 110),
+					cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0))
+		cv2.putText(self.tmpImage, "Possibilita' di tornare indietro tramite backspace", (50, 130),
 					cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0))
 		cv2.putText(self.tmpImage, "Attenzione: cliccare prima linea sopra poi linea sotto", (50, 150),
 					cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 200))
