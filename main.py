@@ -255,7 +255,6 @@ class FoamAnnotate:
 						##########################
 						self.file.flush()
 						self.indexes -= 1
-						print ""
 
 if __name__ == '__main__':
 
